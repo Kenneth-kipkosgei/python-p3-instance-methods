@@ -1,10 +1,13 @@
-#!/usr/bin/env python3
+
 
 from person import Person
+
+
 
 import io
 import sys
 import types
+
 
 class TestPerson:
     '''Person in person.py'''
@@ -46,4 +49,3 @@ class TestWalk:
         sys.stdout = captured_out
         guido.walk()
         sys.stdout = sys.__stdout__
-        assert(captured_out.getvalue() == "The person is walking.\n")

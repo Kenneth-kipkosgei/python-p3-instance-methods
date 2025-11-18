@@ -1,9 +1,16 @@
 #!/usr/bin/env python3
 
 def pytest_itemcollected(item):
-    par = item.parent.obj
-    node = item.obj
-    pref = par.__doc__.strip() if par.__doc__ else par.__class__.__name__
-    suf = node.__doc__.strip() if node.__doc__ else node.__name__
+    """Format collected test node ids using parent/class and test docstrings.
+
+    This is defensive: some pytest Item objects may not have the expected
+    attributes in all contexts, so use getattr and guard against None.
+    """
+    parent_obj = getattr(item.parent, "obj", None)
+    node_obj = getattr(item, "obj", None)
+
+    pref = parent_obj.__doc__.strip() if parent_obj and parent_obj.__doc__ else ""
+    suf = node_obj.__doc__.strip() if node_obj and node_obj.__doc__ else ""
+
     if pref or suf:
-        item._nodeid = ' '.join((pref, suf))
+        item._nodeid = " ".join(filter(None, (pref, suf)))
